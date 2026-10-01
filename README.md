@@ -499,20 +499,6 @@ Example:
 
 ---
 
-#  Swagger Screenshots
-
-## Employee API
-
-![Employee API Swagger](screenshots/swagger-employees.png)
-
-## Search and Filtering
-
-![Employee Search Swagger](screenshots/swagger-search.png)
-
-> Add the actual Swagger screenshots to the `screenshots` folder using the filenames above.
-
----
-
 #  Testing
 
 The API can be tested using:
