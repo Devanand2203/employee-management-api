@@ -499,6 +499,36 @@ Example:
 
 ---
 
+#Swagger Screenshots
+
+### Health of API
+
+![Health of API Swagger](screenshots/gethealth.jpg)
+
+### View Employee
+
+![Get Employees](screenshots/getempresbod.jpg)
+
+### Update 
+
+![Update Employee](screenshots/updempbod.jpg)
+
+### Delete
+
+![Delete Employee](screenshots/delempresbod.jpg)
+
+### Search and Filtering
+
+![Employee Search by name ](screenshots/namesearch.jpg)
+
+![Employee Search by department ](screenshots/searchbydept.jpg)
+
+### Work Mode Validation
+
+![Work Mode Validation](screenshots/emailvalidator.jpg)
+
+---
+
 #  Testing
 
 The API can be tested using:
