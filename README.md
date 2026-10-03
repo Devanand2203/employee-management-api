@@ -548,7 +548,7 @@ Example:
 
 ### Test combined filters
 
-![Testing by multiple filters - status, prioity, limit & offset](screenshots/filterbyemp_status&priority.jpg)
+![Testing by multiple filters - status, prioity, limit & offset](screenshots/filterbyemp_status_priority.jpg)
 
 ### Delete
 
