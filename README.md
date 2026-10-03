@@ -56,11 +56,8 @@ FRAMEWORK/
 ├── README.md
 │
 └── screenshots/
-    ├── swagger-employees.png
-    └── swagger-search.png
-```
 
-> Note: The exact file structure may vary depending on the final implementation.
+```
 
 ---
 
@@ -153,8 +150,6 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=employee_db
 ```
-
-> Never commit your real `.env` file or database password to GitHub.
 
 ---
 
@@ -525,7 +520,47 @@ Example:
 
 ### Work Mode Validation
 
-![Work Mode Validation](screenshots/emailvalidator.jpg)
+![Work Mode Validation](screenshots/workmodevalidator.jpg)
+
+### View Work Items
+
+![Get Work Items](screenshots/post_work_items.jpg)
+
+### Retreive work item by id 
+
+![Get work item by id](screenshots/work_item_by_id.jpg)
+
+### Search using work item title
+
+![Search by work item title](screenshots/search_by_work_item_title.jpg)
+
+### Invalid status and Priority Values 
+
+![Testing by giving invalid status and priority](screenshots/invalid_status&priority.jpg)
+
+### Work Item to non existing employee
+
+![Assigning work item to non existing employee by using employee id](screenshots/nonexisting_emp_id.jpg)
+
+### Pagination - work item 
+
+![Testing pagination using limit & offset in work items](screenshots/pagination_by_limit&offset.jpg)
+
+### Test combined filters
+
+![Testing by multiple filters - status, prioity, limit & offset](screenshots/filterbyemp_status&priority.jpg)
+
+### Delete
+
+![Delete Work Item](screenshots/delete_work_item.jpg)
+
+### Blank Title
+
+![Testing with Blank Title Validation in Work Item](screenshots/blanktitle.jpg)
+
+### Assign to Another Employee
+
+![Updating a work item an assigning to another employee](screenshots/assign_to_another_employee.jpg)
 
 ---
 

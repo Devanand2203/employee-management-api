@@ -68,7 +68,7 @@ class Employee(Base):
         nullable=False
     )
 
-    # Task 4 relationship
+    #  Relationship with Employee table
     work_items = relationship(
         "WorkItem",
         back_populates="employee"
