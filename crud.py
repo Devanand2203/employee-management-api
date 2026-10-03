@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from models import Employee
+from models import Employee, WorkItem
 from schemas import EmployeeCreate, EmployeeUpdate
 
 
@@ -222,3 +222,152 @@ def search_employees(
     )
 
     return employees, total
+
+def create_work_item(
+    db: Session,
+    work_item
+):
+
+    employee = db.query(Employee).filter(
+        Employee.id == work_item.employee_id
+    ).first()
+
+    if not employee:
+        return None
+
+    new_work_item = WorkItem(
+        title=work_item.title.strip(),
+        description=work_item.description,
+        employee_id=work_item.employee_id,
+        status=work_item.status,
+        priority=work_item.priority,
+        due_date=work_item.due_date
+    )
+
+    db.add(new_work_item)
+
+    db.commit()
+
+    db.refresh(new_work_item)
+
+    return new_work_item
+
+def search_work_items(
+    db: Session,
+    search=None,
+    employee_id=None,
+    status=None,
+    priority=None,
+    limit=10,
+    offset=0
+):
+
+    query = db.query(WorkItem)
+
+    if search:
+        query = query.filter(
+            WorkItem.title.ilike(f"%{search}%")
+        )
+
+    if employee_id is not None:
+        query = query.filter(
+            WorkItem.employee_id == employee_id
+        )
+
+    if status:
+        query = query.filter(
+            WorkItem.status == status
+        )
+
+    if priority:
+        query = query.filter(
+            WorkItem.priority == priority
+        )
+
+    total = query.count()
+
+    items = (
+        query
+        .order_by(WorkItem.id.asc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+    return items, total
+
+def get_work_item_by_id(
+    db: Session,
+    work_item_id: int
+):
+
+    return db.query(WorkItem).filter(
+        WorkItem.id == work_item_id
+    ).first()
+
+def update_work_item(
+    db: Session,
+    work_item_id: int,
+    work_item
+):
+
+    existing = db.query(WorkItem).filter(
+        WorkItem.id == work_item_id
+    ).first()
+
+    if not existing:
+        return None
+
+    update_data = work_item.model_dump(
+        exclude_unset=True
+    )
+
+    if "title" in update_data:
+        existing.title = update_data["title"].strip()
+
+    if "description" in update_data:
+        existing.description = update_data["description"]
+
+    if "employee_id" in update_data:
+
+        employee = db.query(Employee).filter(
+            Employee.id == update_data["employee_id"]
+        ).first()
+
+        if not employee:
+            return "employee_not_found"
+
+        existing.employee_id = update_data["employee_id"]
+
+    if "status" in update_data:
+        existing.status = update_data["status"]
+
+    if "priority" in update_data:
+        existing.priority = update_data["priority"]
+
+    if "due_date" in update_data:
+        existing.due_date = update_data["due_date"]
+
+    db.commit()
+
+    db.refresh(existing)
+
+    return existing
+
+def delete_work_item(
+    db: Session,
+    work_item_id: int
+):
+
+    existing = db.query(WorkItem).filter(
+        WorkItem.id == work_item_id
+    ).first()
+
+    if not existing:
+        return False
+
+    db.delete(existing)
+
+    db.commit()
+
+    return True

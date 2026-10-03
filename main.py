@@ -3,7 +3,8 @@ from fastapi import (
     Depends,
     HTTPException,
     Query,
-    status
+    status,
+    Response
 )
 
 from sqlalchemy.orm import Session
@@ -18,7 +19,11 @@ from schemas import (
     EmployeeCreate,
     EmployeeUpdate,
     EmployeeResponse,
-    EmployeeSearchResponse
+    EmployeeSearchResponse,
+    WorkItemCreate,
+    WorkItemUpdate,
+    WorkItemResponse,
+    WorkItemSearchResponse
 )
 
 import crud
@@ -51,6 +56,7 @@ def health_check():
         "message": "Employee Management API is running"
     }
 
+# Employee APIs
 
 @app.post(
     "/employees",
@@ -263,3 +269,233 @@ def delete_employee(
 
         "employee_id": employee_id
     }
+
+#Work Item APIs
+
+@app.post(
+    "/work-items",
+    response_model=WorkItemResponse,
+    status_code=status.HTTP_201_CREATED
+)
+def create_work_item(
+    work_item: WorkItemCreate,
+    db: Session = Depends(get_db)
+):
+
+    if not work_item.title.strip():
+
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Title must not be blank"
+        )
+
+    result = crud.create_work_item(
+        db,
+        work_item
+    )
+
+    if result is None:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assigned employee not found"
+        )
+
+    return result
+
+@app.get(
+    "/work-items",
+    response_model=WorkItemSearchResponse
+)
+def search_work_items(
+
+    search: str | None = None,
+
+    employee_id: int | None = Query(
+        default=None,
+        gt=0
+    ),
+
+    work_status: str | None = Query(
+        default=None,
+        alias="status"
+    ),
+
+    priority: str | None = None,
+
+    limit: int = Query(
+        default=10,
+        ge=1,
+        le=100
+    ),
+
+    offset: int = Query(
+        default=0,
+        ge=0
+    ),
+
+    db: Session = Depends(get_db)
+):
+
+    if work_status is not None and work_status not in [
+        "TODO",
+        "IN_PROGRESS",
+        "COMPLETED"
+    ]:
+
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid status"
+        )
+
+    if priority is not None and priority not in [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+    ]:
+
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid priority"
+        )
+
+    items, total = crud.search_work_items(
+
+        db=db,
+
+        search=search,
+
+        employee_id=employee_id,
+
+        status=work_status,
+
+        priority=priority,
+
+        limit=limit,
+
+        offset=offset
+    )
+
+    return {
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "items": items
+    }
+
+@app.get(
+    "/work-items/{work_item_id}",
+    response_model=WorkItemResponse
+)
+def get_work_item(
+
+    work_item_id: int,
+
+    db: Session = Depends(get_db)
+):
+
+    if work_item_id <= 0:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Work item ID must be greater than 0"
+        )
+
+    work_item = crud.get_work_item_by_id(
+        db,
+        work_item_id
+    )
+
+    if not work_item:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Work item not found"
+        )
+
+    return work_item
+
+@app.put(
+    "/work-items/{work_item_id}",
+    response_model=WorkItemResponse
+)
+def update_work_item(
+
+    work_item_id: int,
+
+    work_item: WorkItemUpdate,
+
+    db: Session = Depends(get_db)
+):
+
+    if work_item_id <= 0:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Work item ID must be greater than 0"
+        )
+
+    if (
+        work_item.title is not None
+        and not work_item.title.strip()
+    ):
+
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Title must not be blank"
+        )
+
+    result = crud.update_work_item(
+        db,
+        work_item_id,
+        work_item
+    )
+
+    if result is None:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Work item not found"
+        )
+
+    if result == "employee_not_found":
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assigned employee not found"
+        )
+
+    return result
+
+@app.delete(
+    "/work-items/{work_item_id}",
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def delete_work_item(
+
+    work_item_id: int,
+
+    db: Session = Depends(get_db)
+):
+
+    if work_item_id <= 0:
+
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Work item ID must be greater than 0"
+        )
+
+    result = crud.delete_work_item(
+        db,
+        work_item_id
+    )
+
+    if not result:
+
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Work item not found"
+        )
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
