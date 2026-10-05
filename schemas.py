@@ -1,7 +1,7 @@
 from datetime import date, datetime
-from typing import Literal
+from typing import Literal,Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field,field_validator
 
 class EmployeeBase(BaseModel):
 
@@ -92,32 +92,40 @@ class WorkItemCreate(WorkItemBase):
 
 class WorkItemUpdate(BaseModel):
 
-    title: str | None = Field(
+    title: Optional[str] = Field(
         default=None,
-        min_length=1,
-        max_length=255
+        min_length=1
     )
 
-    description: str | None = None
+    description: Optional[str] = None 
 
-    employee_id: int | None = Field(
-        default=None,
-        gt=0
-    )
+    employee_id: Optional[int] = None 
 
-    status: Literal[
-        "TODO",
-        "IN_PROGRESS",
-        "COMPLETED"
-    ] | None = None
+    status: Optional[Literal[
+        "TODO","IN_PROGRESS","COMPLETED"]
+    ] = None
 
-    priority: Literal[
+    priority: Optional [ Literal[
         "LOW",
         "MEDIUM",
-        "HIGH"
-    ] | None = None
+        "HIGH"]
+    ]  = None
 
-    due_date: date | None = None
+    due_date: Optional[date] = None
+
+    @field_validator("title","status","priority",mode="before")
+    @classmethod
+    def reject_null_values(cls,value):
+        if value is None:
+            raise ValueError("This field cannot be null")
+        return value
+
+    @field_validator("title")
+    @classmethod
+    def validate_title(cls,value):
+        if not value.strip():
+            raise ValueError("Title cannot be blank")
+        return value.strip()
 
 
 class AssignedEmployeeResponse(BaseModel):

@@ -130,26 +130,29 @@ def delete_employee(
     employee_id: int
 ):
 
-    employee = get_employee_by_id(
-        db,
-        employee_id
-    )
+    employee = db.query(Employee).filter(
+        Employee.id == employee_id
+    ).first()
 
     if not employee:
         return None
 
+    work_items=db.query(WorkItem).filter(
+        WorkItem.employee_id == employee_id
+    ).first()
+
+    if work_items:
+        return "HAS_WORK_ITEMS"
+    
     try:
 
         db.delete(employee)
-
         db.commit()
 
         return employee
 
     except Exception:
-
         db.rollback()
-
         raise
 
 

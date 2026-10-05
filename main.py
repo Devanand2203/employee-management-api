@@ -1,3 +1,5 @@
+from typing import Literal
+
 from fastapi import (
     FastAPI,
     Depends,
@@ -96,7 +98,7 @@ def search_employees(
 
     location: str | None = None,
 
-    work_mode: str | None = None,
+    work_mode: Literal["WFH","WFO"] | None = None,
 
     is_active: bool | None = None,
 
@@ -251,16 +253,23 @@ def delete_employee(
             detail="Employee ID must be greater than 0"
         )
 
-    employee = crud.delete_employee(
+    result = crud.delete_employee(
         db,
         employee_id
     )
 
-    if not employee:
+    if result is None:
 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Employee not found"
+        )
+
+    if result == "HAS_WORK_ITEMS":
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Cannot delete employee because work items are assigned to this employee"
         )
 
     return {
