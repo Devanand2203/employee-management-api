@@ -1,7 +1,8 @@
 from datetime import date, datetime
-from typing import Literal,Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field,field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
 
 class EmployeeBase(BaseModel):
 
@@ -35,8 +36,10 @@ class EmployeeBase(BaseModel):
 class EmployeeCreate(EmployeeBase):
     pass
 
+
 class EmployeeUpdate(EmployeeBase):
     pass
+
 
 class EmployeeResponse(EmployeeBase):
 
@@ -48,6 +51,7 @@ class EmployeeResponse(EmployeeBase):
         "from_attributes": True
     }
 
+
 class EmployeeSearchResponse(BaseModel):
 
     total: int
@@ -57,6 +61,7 @@ class EmployeeSearchResponse(BaseModel):
     offset: int
 
     employees: list[EmployeeResponse]
+
 
 class WorkItemBase(BaseModel):
 
@@ -68,6 +73,7 @@ class WorkItemBase(BaseModel):
     description: str | None = None
 
     employee_id: int = Field(
+        ...,
         gt=0
     )
 
@@ -94,44 +100,69 @@ class WorkItemUpdate(BaseModel):
 
     title: Optional[str] = Field(
         default=None,
-        min_length=1
+        min_length=1,
+        max_length=255
     )
 
-    description: Optional[str] = None 
+    description: Optional[str] = None
 
-    employee_id: Optional[int] = None 
+    employee_id: Optional[int] = Field(
+        default=None,
+        gt=0
+    )
 
-    status: Optional[Literal[
-        "TODO","IN_PROGRESS","COMPLETED"]
+    status: Optional[
+        Literal[
+            "TODO",
+            "IN_PROGRESS",
+            "COMPLETED"
+        ]
     ] = None
 
-    priority: Optional [ Literal[
-        "LOW",
-        "MEDIUM",
-        "HIGH"]
-    ]  = None
+    priority: Optional[
+        Literal[
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+        ]
+    ] = None
 
     due_date: Optional[date] = None
 
-    @field_validator("title","status","priority",mode="before")
+    @field_validator(
+        "title",
+        "status",
+        "priority",
+        mode="before"
+    )
     @classmethod
-    def reject_null_values(cls,value):
+    def reject_null_values(cls, value):
+
         if value is None:
-            raise ValueError("This field cannot be null")
+            raise ValueError(
+                "This field cannot be null"
+            )
+
         return value
 
     @field_validator("title")
     @classmethod
-    def validate_title(cls,value):
+    def validate_title(cls, value):
+
         if not value.strip():
-            raise ValueError("Title cannot be blank")
+            raise ValueError(
+                "Title cannot be blank"
+            )
+
         return value.strip()
 
 
 class AssignedEmployeeResponse(BaseModel):
 
     id: int
+
     name: str
+
     email: EmailStr
 
     model_config = {

@@ -11,13 +11,13 @@ from fastapi import (
 
 from sqlalchemy.orm import Session
 
-from database import (
+from app.database import (
     Base,
     engine,
     get_db
 )
 
-from schemas import (
+from app.schemas import (
     EmployeeCreate,
     EmployeeUpdate,
     EmployeeResponse,
@@ -28,7 +28,7 @@ from schemas import (
     WorkItemSearchResponse
 )
 
-import crud
+import app.crud as crud
 
 
 

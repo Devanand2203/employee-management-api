@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from models import Employee, WorkItem
-from schemas import EmployeeCreate, EmployeeUpdate
+from app.models import Employee, WorkItem
+from app.schemas import EmployeeCreate, EmployeeUpdate,WorkItemCreate,WorkItemUpdate
 
 
 def create_employee(
@@ -228,7 +228,7 @@ def search_employees(
 
 def create_work_item(
     db: Session,
-    work_item
+    work_item: WorkItemCreate
 ):
 
     employee = db.query(Employee).filter(
@@ -311,7 +311,7 @@ def get_work_item_by_id(
 def update_work_item(
     db: Session,
     work_item_id: int,
-    work_item
+    work_item : WorkItemUpdate
 ):
 
     existing = db.query(WorkItem).filter(

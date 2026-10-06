@@ -10,57 +10,59 @@ The project demonstrates CRUD operations, request validation, database integrati
 
 ## Employee Management
 
-- Employee CRUD operations
-- MySQL database integration
-- SQLAlchemy ORM
-- Pydantic request and response validation
-- Email validation
-- Case-insensitive email uniqueness
-- Search employees by name
-- Filter employees by department
-- Filter employees by work mode
-- Pagination using `limit` and `offset`
-- Total employee count
-- Employee health check endpoint
-- Error handling with appropriate HTTP status codes
+* Employee CRUD operations
+* MySQL database integration
+* SQLAlchemy ORM
+* Pydantic request and response validation
+* Email validation
+* Case-insensitive email uniqueness
+* Search employees by name
+* Filter employees by department
+* Filter employees by work mode
+* Pagination using `limit` and `offset`
+* Total employee count
+* Employee health check endpoint
+* Error handling with appropriate HTTP status codes
 
 ## Work Item Management
 
-- Create and assign work items to existing employees
-- Retrieve all work items
-- Retrieve a work item by ID
-- Update work item details
-- Reassign a work item to another employee
-- Delete work items
-- Partial and case-insensitive title search
-- Filter by employee
-- Filter by status
-- Filter by priority
-- Combined filtering
-- Pagination using `limit` and `offset`
-- Total matching work item count before pagination
-- Ascending ordering by work item ID
-- Work item status validation
-- Work item priority validation
-- Blank/whitespace-only title validation
-- Employee existence validation
-- Assigned employee details included in work item responses
-- SQLAlchemy foreign key and relationship between employees and work items
+* Create and assign work items to existing employees
+* Retrieve all work items
+* Retrieve a work item by ID
+* Update work item details
+* Reassign a work item to another employee
+* Delete work items
+* Partial and case-insensitive title search
+* Filter by employee
+* Filter by status
+* Filter by priority
+* Combined filtering
+* Pagination using `limit` and `offset`
+* Total matching work item count before pagination
+* Ascending ordering by work item ID
+* Work item status validation
+* Work item priority validation
+* Blank/whitespace-only title validation
+* Maximum 255-character title validation
+* Positive `employee_id` validation
+* Employee existence validation
+* Assigned employee details included in work item responses
+* SQLAlchemy foreign key and relationship between employees and work items
 
 ---
 
 # Technologies Used
 
-- **Python**
-- **FastAPI**
-- **Pydantic**
-- **SQLAlchemy**
-- **MySQL**
-- **PyMySQL**
-- **Uvicorn**
-- **python-dotenv**
-- **email-validator**
-- **Swagger UI**
+* **Python**
+* **FastAPI**
+* **Pydantic**
+* **SQLAlchemy**
+* **MySQL**
+* **PyMySQL**
+* **Uvicorn**
+* **python-dotenv**
+* **email-validator**
+* **Swagger UI**
 
 ---
 
@@ -69,35 +71,38 @@ The project demonstrates CRUD operations, request validation, database integrati
 ```text
 FRAMEWORK/
 │
-├── main.py
-├── database.py
-├── models.py
-├── schemas.py
-├── crud.py
-├── requirements.txt
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── database.py
+│   ├── models.py
+│   ├── schemas.py
+│   └── crud.py
+│
+├── screenshots/
+│   ├── gethealth.jpg
+│   ├── getempresbod.jpg
+│   ├── updempbod.jpg
+│   ├── delempresbod.jpg
+│   ├── namesearch.jpg
+│   ├── searchbydept.jpg
+│   ├── workmodevalidator.jpg
+│   ├── post_work_items.jpg
+│   ├── work_item_by_id.jpg
+│   ├── search_by_work_item_title.jpg
+│   ├── invalid_status&priority.jpg
+│   ├── nonexisting_emp_id.jpg
+│   ├── pagination_by_limit&offset.jpg
+│   ├── filterbyemp_status_priority.jpg
+│   ├── delete_work_item.jpg
+│   ├── blanktitle.jpg
+│   └── assign_to_another_employee.jpg
+│
 ├── .env
 ├── .env.example
 ├── .gitignore
-├── README.md
-│
-└── screenshots/
-    ├── gethealth.jpg
-    ├── getempresbod.jpg
-    ├── updempbod.jpg
-    ├── delempresbod.jpg
-    ├── namesearch.jpg
-    ├── searchbydept.jpg
-    ├── workmodevalidator.jpg
-    ├── post_work_items.jpg
-    ├── work_item_by_id.jpg
-    ├── search_by_work_item_title.jpg
-    ├── invalid_status&priority.jpg
-    ├── nonexisting_emp_id.jpg
-    ├── pagination_by_limit&offset.jpg
-    ├── filterbyemp_status_priority.jpg
-    ├── delete_work_item.jpg
-    ├── blanktitle.jpg
-    └── assign_to_another_employee.jpg
+├── requirements.txt
+└── README.md
 ```
 
 ---
@@ -203,7 +208,7 @@ Do not commit the actual `.env` file containing your database password.
 Start the FastAPI application using Uvicorn:
 
 ```bash
-python -m uvicorn main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 The application will start at:
@@ -211,6 +216,12 @@ The application will start at:
 ```text
 http://127.0.0.1:8000
 ```
+
+The `app.main:app` command refers to:
+
+* `app` → Python package
+* `main` → `main.py`
+* `app` → FastAPI application instance
 
 ---
 
@@ -228,12 +239,12 @@ http://127.0.0.1:8000/docs
 
 Swagger UI allows you to:
 
-- View available endpoints
-- Check request and response schemas
-- Enter request data
-- Execute API requests
-- View HTTP status codes
-- Test validation and error responses
+* View available endpoints
+* Check request and response schemas
+* Enter request data
+* Execute API requests
+* View HTTP status codes
+* Test validation and error responses
 
 ## ReDoc
 
@@ -251,17 +262,17 @@ The Employee API provides operations for creating, viewing, updating, deleting, 
 
 ## Employee Fields
 
-| Field | Description |
-|---|---|
-| `id` | Auto-generated employee ID |
-| `name` | Employee name |
-| `email` | Employee email address |
-| `department` | Employee department |
-| `primary_skill` | Primary technical skill |
-| `location` | Employee location |
-| `work_mode` | Work mode |
-| `is_active` | Employee active status |
-| `created_at` | Record creation date |
+| Field           | Description                |
+| --------------- | -------------------------- |
+| `id`            | Auto-generated employee ID |
+| `name`          | Employee name              |
+| `email`         | Employee email address     |
+| `department`    | Employee department        |
+| `primary_skill` | Primary technical skill    |
+| `location`      | Employee location          |
+| `work_mode`     | WFH or WFO                 |
+| `is_active`     | Employee active status     |
+| `created_at`    | Record creation date       |
 
 ---
 
@@ -285,6 +296,12 @@ Example request:
   "work_mode": "WFH",
   "is_active": true
 }
+```
+
+Successful creation returns:
+
+```text
+201 Created
 ```
 
 ---
@@ -344,6 +361,8 @@ Successful deletion returns:
 ```text
 204 No Content
 ```
+
+Employees with existing work items cannot be deleted.
 
 ---
 
@@ -417,7 +436,7 @@ or:
 An unsupported work mode returns:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
@@ -426,8 +445,8 @@ An unsupported work mode returns:
 
 The employee search endpoint supports pagination using:
 
-- `limit`
-- `offset`
+* `limit`
+* `offset`
 
 Example:
 
@@ -443,10 +462,10 @@ To retrieve the next set:
 /employees/search?limit=5&offset=5
 ```
 
-| Parameter | Description |
-|---|---|
-| `limit` | Maximum number of records returned |
-| `offset` | Number of records skipped |
+| Parameter | Description                        |
+| --------- | ---------------------------------- |
+| `limit`   | Maximum number of records returned |
+| `offset`  | Number of records skipped          |
 
 Example:
 
@@ -490,16 +509,16 @@ Each work item belongs to one employee.
 
 The `work_items` table contains the following fields:
 
-| Field | Description |
-|---|---|
-| `id` | Auto-generated primary key |
-| `title` | Required work item title |
-| `description` | Optional description |
-| `employee_id` | ID of the assigned employee |
-| `status` | TODO, IN_PROGRESS or COMPLETED |
-| `priority` | LOW, MEDIUM or HIGH |
-| `due_date` | Optional due date |
-| `created_at` | Automatically generated date/time |
+| Field         | Description                                      |
+| ------------- | ------------------------------------------------ |
+| `id`          | Auto-generated primary key                       |
+| `title`       | Required work item title, maximum 255 characters |
+| `description` | Optional description                             |
+| `employee_id` | ID of the assigned employee                      |
+| `status`      | TODO, IN_PROGRESS or COMPLETED                   |
+| `priority`    | LOW, MEDIUM or HIGH                              |
+| `due_date`    | Optional due date                                |
+| `created_at`  | Automatically generated date/time                |
 
 Default values:
 
@@ -522,12 +541,12 @@ Conceptually:
 
 ```text
 employees
-   │
-   │ 1
-   │
-   │
-   │ *
-   ▼
+    │
+    │ 1
+    │
+    │
+    │ *
+    ▼
 work_items
 ```
 
@@ -568,7 +587,7 @@ Example:
 An invalid status returns:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
@@ -592,7 +611,7 @@ MEDIUM
 An invalid priority returns:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
@@ -638,7 +657,7 @@ Example response:
   "priority": "MEDIUM",
   "due_date": "2026-10-10",
   "created_at": "2026-10-04T01:20:00",
-  "assigned_employee": {
+  "employee": {
     "id": 2,
     "name": "Employee Name",
     "email": "employee@example.com"
@@ -664,18 +683,18 @@ Returns work items with optional search, filtering, and pagination.
 
 ## Query Parameters
 
-| Parameter | Description | Default |
-|---|---|---|
-| `search` | Partial, case-insensitive search on title | None |
-| `employee_id` | Filter by assigned employee | None |
-| `status` | Filter by status | None |
-| `priority` | Filter by priority | None |
-| `limit` | Number of records returned | 10 |
-| `offset` | Number of records skipped | 0 |
+| Parameter     | Description                               | Default |
+| ------------- | ----------------------------------------- | ------- |
+| `search`      | Partial, case-insensitive search on title | None    |
+| `employee_id` | Filter by assigned employee               | None    |
+| `status`      | Filter by status                          | None    |
+| `priority`    | Filter by priority                        | None    |
+| `limit`       | Number of records returned                | 10      |
+| `offset`      | Number of records skipped                 | 0       |
 
 ---
 
-## Search Work Items by Title
+# Search Work Items by Title
 
 Example:
 
@@ -685,9 +704,9 @@ GET /work-items?search=report
 
 The search is:
 
-- Partial
-- Case-insensitive
-- Performed on the work item title
+* Partial
+* Case-insensitive
+* Performed on the work item title
 
 For example, searching for:
 
@@ -705,7 +724,7 @@ Project Report
 
 ---
 
-## Filter by Employee
+# Filter by Employee
 
 ```text
 GET /work-items?employee_id=2
@@ -715,7 +734,7 @@ Returns work items assigned to employee `2`.
 
 ---
 
-## Filter by Status
+# Filter by Status
 
 ```text
 GET /work-items?status=IN_PROGRESS
@@ -725,7 +744,7 @@ Returns only work items with `IN_PROGRESS` status.
 
 ---
 
-## Filter by Priority
+# Filter by Priority
 
 ```text
 GET /work-items?priority=HIGH
@@ -735,7 +754,7 @@ Returns only work items with `HIGH` priority.
 
 ---
 
-## Combined Filters
+# Combined Filters
 
 All supplied filters can be used together.
 
@@ -753,8 +772,8 @@ The response contains only records matching all supplied filters.
 
 Work item pagination uses:
 
-- `limit`
-- `offset`
+* `limit`
+* `offset`
 
 Example:
 
@@ -770,10 +789,10 @@ GET /work-items?limit=10&offset=10
 
 The allowed values are:
 
-| Parameter | Rule |
-|---|---|
-| `limit` | Default 10, minimum 1, maximum 100 |
-| `offset` | Default 0, minimum 0 |
+| Parameter | Rule                               |
+| --------- | ---------------------------------- |
+| `limit`   | Default 10, minimum 1, maximum 100 |
+| `offset`  | Default 0, minimum 0               |
 
 Work items are returned in ascending order by ID.
 
@@ -904,7 +923,7 @@ Example:
   "employee_id": 2,
   "status": "TODO",
   "priority": "MEDIUM",
-  "assigned_employee": {
+  "employee": {
     "id": 2,
     "name": "Employee Name",
     "email": "employee@example.com"
@@ -912,7 +931,7 @@ Example:
 }
 ```
 
-This is provided through the SQLAlchemy relationship between `Employee` and `WorkItem`.
+The `employee` field is provided through the SQLAlchemy relationship between `Employee` and `WorkItem`.
 
 ---
 
@@ -921,6 +940,14 @@ This is provided through the SQLAlchemy relationship between `Employee` and `Wor
 ## Title
 
 The title is required and must not be empty.
+
+The title must contain at least one non-whitespace character.
+
+The maximum title length is:
+
+```text
+255 characters
+```
 
 Invalid examples:
 
@@ -941,7 +968,13 @@ and:
 Blank or whitespace-only titles are rejected with:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
+```
+
+A title exceeding 255 characters is also rejected with:
+
+```text
+422 Unprocessable Entity
 ```
 
 ---
@@ -974,6 +1007,12 @@ Invalid:
 }
 ```
 
+Values of `0` or below return:
+
+```text
+422 Unprocessable Entity
+```
+
 The employee must also exist in the database.
 
 A nonexistent employee returns:
@@ -982,11 +1021,15 @@ A nonexistent employee returns:
 404 Not Found
 ```
 
+For work item creation, `employee_id` is required.
+
+For work item updates, `employee_id` may be omitted, but when provided it must be greater than `0`.
+
 ---
 
 ## Status Validation
 
-Valid:
+Valid values:
 
 ```text
 TODO
@@ -997,14 +1040,14 @@ COMPLETED
 Invalid status values return:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
 
 ## Priority Validation
 
-Valid:
+Valid values:
 
 ```text
 LOW
@@ -1015,7 +1058,7 @@ HIGH
 Invalid priority values return:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
@@ -1078,20 +1121,20 @@ Database name:
 employee_db
 ```
 
-The database contains the employee and work item data.
+The database contains employee and work item data.
 
 SQLAlchemy is used as the ORM layer.
 
 SQLAlchemy is responsible for:
 
-- Defining database models
-- Creating database queries
-- Inserting records
-- Updating records
-- Deleting records
-- Retrieving records
-- Managing database sessions
-- Handling employee/work-item relationships
+* Defining database models
+* Creating database queries
+* Inserting records
+* Updating records
+* Deleting records
+* Retrieving records
+* Managing database sessions
+* Handling employee/work-item relationships
 
 ---
 
@@ -1104,7 +1147,7 @@ Therefore, restarting the FastAPI application does not remove existing records.
 After stopping and restarting the application:
 
 ```bash
-python -m uvicorn main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 existing records can still be retrieved through:
@@ -1113,7 +1156,7 @@ existing records can still be retrieved through:
 GET /work-items
 ```
 
-This confirms that the records are persisted in the database rather than being stored only in application memory.
+This confirms that records are persisted in the database rather than being stored only in application memory.
 
 ---
 
@@ -1123,24 +1166,25 @@ The API uses Pydantic for request validation.
 
 Validation includes:
 
-- Required fields
-- Email format
-- String validation
-- Numeric validation
-- Work mode validation
-- Work item status validation
-- Work item priority validation
-- Positive employee ID validation
-- Pagination validation
-- Blank title validation
-- Request body validation
+* Required fields
+* Email format
+* String validation
+* Numeric validation
+* Work mode validation
+* Work item status validation
+* Work item priority validation
+* Positive employee ID validation
+* Pagination validation
+* Blank title validation
+* Maximum 255-character title validation
+* Request body validation
 
 Invalid requests return appropriate FastAPI validation errors.
 
 Example:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
@@ -1149,16 +1193,17 @@ Example:
 
 The API handles common errors such as:
 
-- Employee not found
-- Work item not found
-- Invalid employee ID
-- Duplicate employee email
-- Invalid request body
-- Invalid work mode
-- Invalid work item status
-- Invalid work item priority
-- Blank work item title
-- Database-related errors
+* Employee not found
+* Work item not found
+* Invalid employee ID
+* Duplicate employee email
+* Invalid request body
+* Invalid work mode
+* Invalid work item status
+* Invalid work item priority
+* Blank work item title
+* Title exceeding 255 characters
+* Database-related errors
 
 Example:
 
@@ -1174,9 +1219,9 @@ Example:
 
 The API can be tested using:
 
-- Swagger UI
-- Postman
-- Browser for GET requests
+* Swagger UI
+* Postman
+* Browser for GET requests
 
 Swagger UI:
 
@@ -1190,7 +1235,7 @@ http://127.0.0.1:8000/docs
 
 The following Work Item API scenarios should be tested.
 
-## 1. Create a work item for an existing employee
+## 1. Create a Work Item for an Existing Employee
 
 ```text
 POST /work-items
@@ -1204,7 +1249,7 @@ Expected:
 
 ---
 
-## 2. Assign a work item to a nonexistent employee
+## 2. Assign a Work Item to a Nonexistent Employee
 
 Use an employee ID that does not exist.
 
@@ -1216,7 +1261,7 @@ Expected:
 
 ---
 
-## 3. Retrieve a work item by ID
+## 3. Retrieve a Work Item by ID
 
 ```text
 GET /work-items/{work_item_id}
@@ -1230,7 +1275,7 @@ Expected:
 
 ---
 
-## 4. Search using part of a work item title
+## 4. Search Using Part of a Work Item Title
 
 ```text
 GET /work-items?search=report
@@ -1238,12 +1283,12 @@ GET /work-items?search=report
 
 Expected:
 
-- Partial title matching
-- Case-insensitive search
+* Partial title matching
+* Case-insensitive search
 
 ---
 
-## 5. Filter by employee
+## 5. Filter by Employee
 
 ```text
 GET /work-items?employee_id=2
@@ -1251,7 +1296,7 @@ GET /work-items?employee_id=2
 
 ---
 
-## 6. Filter by status
+## 6. Filter by Status
 
 ```text
 GET /work-items?status=IN_PROGRESS
@@ -1259,7 +1304,7 @@ GET /work-items?status=IN_PROGRESS
 
 ---
 
-## 7. Filter by priority
+## 7. Filter by Priority
 
 ```text
 GET /work-items?priority=HIGH
@@ -1267,7 +1312,7 @@ GET /work-items?priority=HIGH
 
 ---
 
-## 8. Test combined filters
+## 8. Test Combined Filters
 
 Example:
 
@@ -1281,7 +1326,7 @@ Only records matching all supplied filters are returned.
 
 ---
 
-## 9. Test pagination
+## 9. Test Pagination
 
 First page:
 
@@ -1297,13 +1342,13 @@ GET /work-items?limit=2&offset=2
 
 Expected:
 
-- `limit` controls returned records
-- `offset` controls skipped records
-- `total` remains the total matching record count before pagination
+* `limit` controls returned records
+* `offset` controls skipped records
+* `total` remains the total matching record count before pagination
 
 ---
 
-## 10. Test invalid status
+## 10. Test Invalid Status
 
 Example:
 
@@ -1314,12 +1359,12 @@ GET /work-items?status=INVALID
 Expected:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
 
-## 11. Test invalid priority
+## 11. Test Invalid Priority
 
 Example:
 
@@ -1330,12 +1375,12 @@ GET /work-items?priority=INVALID
 Expected:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
 
-## 12. Test blank title validation
+## 12. Test Blank Title Validation
 
 Example:
 
@@ -1349,12 +1394,52 @@ Example:
 Expected:
 
 ```text
-422 Unprocessable Content
+422 Unprocessable Entity
 ```
 
 ---
 
-## 13. Test missing work item ID
+## 13. Test Title Length Validation
+
+A title containing more than 255 characters should be rejected.
+
+Expected:
+
+```text
+422 Unprocessable Entity
+```
+
+---
+
+## 14. Test Invalid Employee ID
+
+Example:
+
+```json
+{
+  "title": "Prepare report",
+  "employee_id": 0
+}
+```
+
+Expected:
+
+```text
+422 Unprocessable Entity
+```
+
+The same applies to negative values such as:
+
+```json
+{
+  "title": "Prepare report",
+  "employee_id": -1
+}
+```
+
+---
+
+## 15. Test Missing Work Item
 
 Example:
 
@@ -1370,7 +1455,7 @@ Expected:
 
 ---
 
-## 14. Update and assign to another employee
+## 16. Update and Assign to Another Employee
 
 ```text
 PUT /work-items/1
@@ -1380,13 +1465,13 @@ Change the `employee_id` to another existing employee.
 
 Expected:
 
-- Work item is updated.
-- Assignment is changed.
-- New employee details are returned.
+* Work item is updated
+* Assignment is changed
+* New employee details are returned
 
 ---
 
-## 15. Delete a work item
+## 17. Delete a Work Item
 
 ```text
 DELETE /work-items/1
@@ -1400,12 +1485,12 @@ Expected:
 
 ---
 
-## 16. Restart the application
+## 18. Restart the Application
 
 Stop the application and restart it:
 
 ```bash
-python -m uvicorn main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 Then:
@@ -1416,22 +1501,28 @@ GET /work-items
 
 Expected:
 
-- Previously created records remain available.
-- Records are persisted in MySQL.
+* Previously created records remain available
+* Records are persisted in MySQL
 
 ---
 
-## 17. Confirm Existing Employee APIs
+## 19. Confirm Existing Employee APIs
 
 Verify that the Employee APIs continue working after Task 4.
 
 ```text
 POST /employees
+
 GET /employees
+
 GET /employees/{employee_id}
+
 PUT /employees/{employee_id}
+
 DELETE /employees/{employee_id}
+
 GET /employees/search
+
 GET /health
 ```
 
@@ -1441,20 +1532,20 @@ No regression should occur in the existing Employee functionality.
 
 # API Summary
 
-| Method | Endpoint | Purpose | Success |
-|---|---|---|---|
-| POST | `/employees` | Create employee | 201 |
-| GET | `/employees` | Get employees | 200 |
-| GET | `/employees/{employee_id}` | Get employee by ID | 200 |
-| PUT | `/employees/{employee_id}` | Update employee | 200 |
-| DELETE | `/employees/{employee_id}` | Delete employee | 204 |
-| GET | `/employees/search` | Search/filter employees | 200 |
-| GET | `/health` | Health check | 200 |
-| POST | `/work-items` | Create work item | 201 |
-| GET | `/work-items` | List/search/filter work items | 200 |
-| GET | `/work-items/{work_item_id}` | Get work item by ID | 200 |
-| PUT | `/work-items/{work_item_id}` | Update/reassign work item | 200 |
-| DELETE | `/work-items/{work_item_id}` | Delete work item | 204 |
+| Method | Endpoint                     | Purpose                       | Success |
+| ------ | ---------------------------- | ----------------------------- | ------- |
+| POST   | `/employees`                 | Create employee               | 201     |
+| GET    | `/employees`                 | Get employees                 | 200     |
+| GET    | `/employees/{employee_id}`   | Get employee by ID            | 200     |
+| PUT    | `/employees/{employee_id}`   | Update employee               | 200     |
+| DELETE | `/employees/{employee_id}`   | Delete employee               | 204     |
+| GET    | `/employees/search`          | Search/filter employees       | 200     |
+| GET    | `/health`                    | Health check                  | 200     |
+| POST   | `/work-items`                | Create work item              | 201     |
+| GET    | `/work-items`                | List/search/filter work items | 200     |
+| GET    | `/work-items/{work_item_id}` | Get work item by ID           | 200     |
+| PUT    | `/work-items/{work_item_id}` | Update/reassign work item     | 200     |
+| DELETE | `/work-items/{work_item_id}` | Delete work item              | 204     |
 
 ---
 
@@ -1497,6 +1588,8 @@ Validate title
        │
        ▼
 Validate employee_id
+       │
+       ├── Invalid ──► 422 Unprocessable Entity
        │
        ▼
 Check employee exists
@@ -1617,7 +1710,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ## Invalid Status and Priority Values
 
-![Testing invalid status and priority](screenshots/invalid_status&priority.jpg)
+![Testing invalid status and priority](screenshots/invalid_status\&priority.jpg)
 
 ## Work Item Assigned to Non-existing Employee
 
@@ -1625,7 +1718,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ## Work Item Pagination
 
-![Testing pagination using limit and offset](screenshots/pagination_by_limit&offset.jpg)
+![Testing pagination using limit and offset](screenshots/pagination_by_limit\&offset.jpg)
 
 ## Combined Filters
 
@@ -1647,37 +1740,39 @@ The following screenshots document the API testing performed through Swagger UI.
 
 # Task 4 Requirements Mapping
 
-| Requirement | Implementation |
-|---|---|
-| `work_items` table | Added |
-| Auto-generated ID | SQLAlchemy primary key |
-| Required title | Pydantic validation |
-| Blank title rejection | Validation |
-| Optional description | Supported |
-| Employee assignment | `employee_id` |
-| Employee foreign key | `ForeignKey("employees.id")` |
-| SQLAlchemy relationship | Employee ↔ WorkItem |
-| Status values | TODO, IN_PROGRESS, COMPLETED |
-| Priority values | LOW, MEDIUM, HIGH |
-| Default status | TODO |
-| Default priority | MEDIUM |
-| Optional due date | Supported |
-| Auto-generated created time | SQLAlchemy timestamp |
-| Create API | `POST /work-items` |
-| List API | `GET /work-items` |
-| Get by ID | `GET /work-items/{work_item_id}` |
-| Update/reassign | `PUT /work-items/{work_item_id}` |
-| Delete | `DELETE /work-items/{work_item_id}` |
-| Search | Partial, case-insensitive title search |
-| Employee filter | Supported |
-| Status filter | Supported |
-| Priority filter | Supported |
-| Combined filters | Supported |
-| Pagination | `limit` and `offset` |
-| Ascending ID order | Supported |
-| Total before pagination | Supported |
-| Employee details in response | `assigned_employee` |
-| Existing Employee APIs | Preserved |
+| Requirement                  | Implementation                         |
+| ---------------------------- | -------------------------------------- |
+| `work_items` table           | Added                                  |
+| Auto-generated ID            | SQLAlchemy primary key                 |
+| Required title               | Pydantic validation                    |
+| Blank title rejection        | Validation                             |
+| Maximum 255-character title  | Pydantic validation                    |
+| Optional description         | Supported                              |
+| Employee assignment          | `employee_id`                          |
+| Positive employee ID         | `employee_id > 0` validation           |
+| Employee foreign key         | `ForeignKey("employees.id")`           |
+| SQLAlchemy relationship      | Employee ↔ WorkItem                    |
+| Status values                | TODO, IN_PROGRESS, COMPLETED           |
+| Priority values              | LOW, MEDIUM, HIGH                      |
+| Default status               | TODO                                   |
+| Default priority             | MEDIUM                                 |
+| Optional due date            | Supported                              |
+| Auto-generated created time  | SQLAlchemy timestamp                   |
+| Create API                   | `POST /work-items`                     |
+| List API                     | `GET /work-items`                      |
+| Get by ID                    | `GET /work-items/{work_item_id}`       |
+| Update/reassign              | `PUT /work-items/{work_item_id}`       |
+| Delete                       | `DELETE /work-items/{work_item_id}`    |
+| Search                       | Partial, case-insensitive title search |
+| Employee filter              | Supported                              |
+| Status filter                | Supported                              |
+| Priority filter              | Supported                              |
+| Combined filters             | Supported                              |
+| Pagination                   | `limit` and `offset`                   |
+| Ascending ID order           | Supported                              |
+| Total before pagination      | Supported                              |
+| Employee details in response | `employee` relationship                |
+| Existing Employee APIs       | Preserved                              |
 
 ---
 
@@ -1685,16 +1780,16 @@ The following screenshots document the API testing performed through Swagger UI.
 
 Possible future enhancements include:
 
-- JWT authentication
-- Role-based access control
-- Advanced employee filtering
-- Sorting support
-- Automated testing with Pytest
-- Docker support
-- Production deployment
-- API logging
-- Database migrations using Alembic
-- More advanced work item sorting and reporting
+* JWT authentication
+* Role-based access control
+* Advanced employee filtering
+* Sorting support
+* Automated testing with Pytest
+* Docker support
+* Production deployment
+* API logging
+* Database migrations using Alembic
+* More advanced work item sorting and reporting
 
 ---
 
