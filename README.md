@@ -899,7 +899,7 @@ DELETE /work-items/1
 Successful deletion returns:
 
 ```text
-204 No Content
+200 OK
 ```
 
 If the work item does not exist:
@@ -976,7 +976,20 @@ A title exceeding 255 characters is also rejected with:
 ```text
 422 Unprocessable Entity
 ```
+---
+## Description
 
+The description is optional.
+
+The maximum description length is:
+
+1000 characters
+
+Descriptions exceeding 1,000 characters are rejected with:
+
+'''text
+422 Unprocessable Entity
+'''
 ---
 
 ## Employee ID
@@ -1177,6 +1190,7 @@ Validation includes:
 * Pagination validation
 * Blank title validation
 * Maximum 255-character title validation
+* Maximum 1,000-character description validation
 * Request body validation
 
 Invalid requests return appropriate FastAPI validation errors.
@@ -1480,7 +1494,7 @@ DELETE /work-items/1
 Expected:
 
 ```text
-204 No Content
+200 OK
 ```
 
 ---
@@ -1538,14 +1552,14 @@ No regression should occur in the existing Employee functionality.
 | GET    | `/employees`                 | Get employees                 | 200     |
 | GET    | `/employees/{employee_id}`   | Get employee by ID            | 200     |
 | PUT    | `/employees/{employee_id}`   | Update employee               | 200     |
-| DELETE | `/employees/{employee_id}`   | Delete employee               | 204     |
+| DELETE | `/employees/{employee_id}`   | Delete employee               | 200     |
 | GET    | `/employees/search`          | Search/filter employees       | 200     |
 | GET    | `/health`                    | Health check                  | 200     |
 | POST   | `/work-items`                | Create work item              | 201     |
 | GET    | `/work-items`                | List/search/filter work items | 200     |
 | GET    | `/work-items/{work_item_id}` | Get work item by ID           | 200     |
 | PUT    | `/work-items/{work_item_id}` | Update/reassign work item     | 200     |
-| DELETE | `/work-items/{work_item_id}` | Delete work item              | 204     |
+| DELETE | `/work-items/{work_item_id}` | Delete work item              | 200     |
 
 ---
 
