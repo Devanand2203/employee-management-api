@@ -44,6 +44,7 @@ The project demonstrates CRUD operations, request validation, database integrati
 * Work item priority validation
 * Blank/whitespace-only title validation
 * Maximum 255-character title validation
+* Maximum 1,000-character description validation
 * Positive `employee_id` validation
 * Employee existence validation
 * Assigned employee details included in work item responses
@@ -69,7 +70,7 @@ The project demonstrates CRUD operations, request validation, database integrati
 # Project Structure
 
 ```text
-FRAMEWORK/
+employee-management-api/
 │
 ├── app/
 │   ├── __init__.py
@@ -98,7 +99,6 @@ FRAMEWORK/
 │   ├── blanktitle.jpg
 │   └── assign_to_another_employee.jpg
 │
-├── .env
 ├── .env.example
 ├── .gitignore
 ├── requirements.txt
@@ -513,7 +513,7 @@ The `work_items` table contains the following fields:
 | ------------- | ------------------------------------------------ |
 | `id`          | Auto-generated primary key                       |
 | `title`       | Required work item title, maximum 255 characters |
-| `description` | Optional description                             |
+| `description` | Optional description, maximum 1,000 characters   |
 | `employee_id` | ID of the assigned employee                      |
 | `status`      | TODO, IN_PROGRESS or COMPLETED                   |
 | `priority`    | LOW, MEDIUM or HIGH                              |
@@ -899,7 +899,7 @@ DELETE /work-items/1
 Successful deletion returns:
 
 ```text
-200 OK
+204 No Content
 ```
 
 If the work item does not exist:
@@ -983,13 +983,13 @@ The description is optional.
 
 The maximum description length is:
 
-1000 characters
+1,000 characters
 
 Descriptions exceeding 1,000 characters are rejected with:
 
-'''text
+```text
 422 Unprocessable Entity
-'''
+```
 ---
 
 ## Employee ID
@@ -1217,6 +1217,7 @@ The API handles common errors such as:
 * Invalid work item priority
 * Blank work item title
 * Title exceeding 255 characters
+* Description exceeding 1,000 characters
 * Database-related errors
 
 Example:
@@ -1425,7 +1426,19 @@ Expected:
 
 ---
 
-## 14. Test Invalid Employee ID
+## 14. Test Description Length Validation
+
+A description containing more than 1,000 characters should be rejected.
+
+Expected:
+
+```text
+422 Unprocessable Entity
+```
+
+---
+
+## 15. Test Invalid Employee ID
 
 Example:
 
@@ -1453,7 +1466,26 @@ The same applies to negative values such as:
 
 ---
 
-## 15. Test Missing Work Item
+## 16. Test Null Employee ID
+
+Example:
+
+```json
+{
+  "title": "Prepare report",
+  "employee_id": null
+}
+```
+
+Expected:
+
+```text
+422 Unprocessable Entity
+```
+
+---
+
+## 17. Test Missing Work Item
 
 Example:
 
@@ -1469,7 +1501,7 @@ Expected:
 
 ---
 
-## 16. Update and Assign to Another Employee
+## 18. Update and Assign to Another Employee
 
 ```text
 PUT /work-items/1
@@ -1485,7 +1517,7 @@ Expected:
 
 ---
 
-## 17. Delete a Work Item
+## 19. Delete a Work Item
 
 ```text
 DELETE /work-items/1
@@ -1494,12 +1526,12 @@ DELETE /work-items/1
 Expected:
 
 ```text
-200 OK
+204 No Content
 ```
 
 ---
 
-## 18. Restart the Application
+## 20. Restart the Application
 
 Stop the application and restart it:
 
@@ -1520,7 +1552,7 @@ Expected:
 
 ---
 
-## 19. Confirm Existing Employee APIs
+## 21. Confirm Existing Employee APIs
 
 Verify that the Employee APIs continue working after Task 4.
 
@@ -1559,7 +1591,7 @@ No regression should occur in the existing Employee functionality.
 | GET    | `/work-items`                | List/search/filter work items | 200     |
 | GET    | `/work-items/{work_item_id}` | Get work item by ID           | 200     |
 | PUT    | `/work-items/{work_item_id}` | Update/reassign work item     | 200     |
-| DELETE | `/work-items/{work_item_id}` | Delete work item              | 200     |
+| DELETE | `/work-items/{work_item_id}` | Delete work item              | 204     |
 
 ---
 
@@ -1762,6 +1794,7 @@ The following screenshots document the API testing performed through Swagger UI.
 | Blank title rejection        | Validation                             |
 | Maximum 255-character title  | Pydantic validation                    |
 | Optional description         | Supported                              |
+| Maximum 1,000-character description  | Pydantic validation            |
 | Employee assignment          | `employee_id`                          |
 | Positive employee ID         | `employee_id > 0` validation           |
 | Employee foreign key         | `ForeignKey("employees.id")`           |
@@ -1777,6 +1810,7 @@ The following screenshots document the API testing performed through Swagger UI.
 | Get by ID                    | `GET /work-items/{work_item_id}`       |
 | Update/reassign              | `PUT /work-items/{work_item_id}`       |
 | Delete                       | `DELETE /work-items/{work_item_id}`    |
+| Database rollback handling   | Create, update, and delete operations  |
 | Search                       | Partial, case-insensitive title search |
 | Employee filter              | Supported                              |
 | Status filter                | Supported                              |
