@@ -67,7 +67,7 @@ class WorkItemBase(BaseModel):
 
     title: str = Field(
         min_length=1,
-        max_length=255
+        max_length=1000
     )
 
     description: str | None = None
@@ -101,7 +101,7 @@ class WorkItemUpdate(BaseModel):
     title: Optional[str] = Field(
         default=None,
         min_length=1,
-        max_length=255
+        max_length=1000
     )
 
     description: Optional[str] = None
