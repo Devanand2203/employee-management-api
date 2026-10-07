@@ -114,13 +114,13 @@ FRAMEWORK/
 Clone the project repository:
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/Devanand2203/employee-management-api.git
 ```
 
 Move into the project directory:
 
 ```bash
-cd FRAMEWORK
+cd employee-management-api
 ```
 
 ---
@@ -359,7 +359,7 @@ DELETE /employees/1
 Successful deletion returns:
 
 ```text
-204 No Content
+200 OK
 ```
 
 Employees with existing work items cannot be deleted.

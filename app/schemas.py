@@ -131,6 +131,7 @@ class WorkItemUpdate(BaseModel):
 
     @field_validator(
         "title",
+        "employee_id",
         "status",
         "priority",
         mode="before"
