@@ -95,6 +95,17 @@ class WorkItemBase(BaseModel):
     due_date: date | None = None
 
 
+    @field_validator("title")
+    @classmethod
+    def validate_title(cls, value):
+
+        if not value.strip():
+            raise ValueError(
+                "Title cannot be blank"
+            )
+
+        return value.strip()
+
 class WorkItemCreate(WorkItemBase):
     pass
 
@@ -152,16 +163,6 @@ class WorkItemUpdate(BaseModel):
 
         return value
 
-    @field_validator("title")
-    @classmethod
-    def validate_title(cls, value):
-
-        if not value.strip():
-            raise ValueError(
-                "Title cannot be blank"
-            )
-
-        return value.strip()
 
 
 class AssignedEmployeeResponse(BaseModel):
