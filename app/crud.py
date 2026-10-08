@@ -247,13 +247,20 @@ def create_work_item(
         due_date=work_item.due_date
     )
 
-    db.add(new_work_item)
+    try:
+       db.add(new_work_item)
 
-    db.commit()
+       db.commit()
 
-    db.refresh(new_work_item)
+       db.refresh(new_work_item)
 
-    return new_work_item
+       return new_work_item
+
+    except Exception:
+
+       db.rollback()
+
+       raise
 
 def search_work_items(
     db: Session,
@@ -325,37 +332,42 @@ def update_work_item(
         exclude_unset=True
     )
 
-    if "title" in update_data:
-        existing.title = update_data["title"].strip()
+    try:
+       if "title" in update_data:
+           existing.title = update_data["title"].strip()
 
-    if "description" in update_data:
-        existing.description = update_data["description"]
+       if "description" in update_data:
+            existing.description = update_data["description"]
 
-    if "employee_id" in update_data:
+       if "employee_id" in update_data:
 
-        employee = db.query(Employee).filter(
-            Employee.id == update_data["employee_id"]
-        ).first()
+          employee = db.query(Employee).filter(
+              Employee.id == update_data["employee_id"]
+              ).first()
+          
+          if not employee:
+              return "employee_not_found"
+          
+          existing.employee_id = update_data["employee_id"]
 
-        if not employee:
-            return "employee_not_found"
+       if "status" in update_data:
+           existing.status = update_data["status"]
 
-        existing.employee_id = update_data["employee_id"]
+       if "priority" in update_data:
+           existing.priority = update_data["priority"]
 
-    if "status" in update_data:
-        existing.status = update_data["status"]
+       if "due_date" in update_data:
+           existing.due_date = update_data["due_date"]
 
-    if "priority" in update_data:
-        existing.priority = update_data["priority"]
+       db.commit()
 
-    if "due_date" in update_data:
-        existing.due_date = update_data["due_date"]
+       db.refresh(existing)
 
-    db.commit()
+       return existing
 
-    db.refresh(existing)
-
-    return existing
+    except Exception:
+       db.rollback()
+       raise
 
 def delete_work_item(
     db: Session,
@@ -366,11 +378,19 @@ def delete_work_item(
         WorkItem.id == work_item_id
     ).first()
 
+
     if not existing:
         return False
 
-    db.delete(existing)
+    try:
 
-    db.commit()
+        db.delete(existing)
 
-    return True
+        db.commit()
+
+        return True
+
+    except Exception:
+        db.rollback()
+
+        raise

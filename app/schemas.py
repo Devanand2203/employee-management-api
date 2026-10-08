@@ -67,10 +67,13 @@ class WorkItemBase(BaseModel):
 
     title: str = Field(
         min_length=1,
-        max_length=1000
+        max_length=255
     )
 
-    description: str | None = None
+    description: str | None = Field(
+        default=None,
+        max_length=1000
+    )
 
     employee_id: int = Field(
         ...,
@@ -101,10 +104,13 @@ class WorkItemUpdate(BaseModel):
     title: Optional[str] = Field(
         default=None,
         min_length=1,
-        max_length=1000
+        max_length=255
     )
 
-    description: Optional[str] = None
+    description: Optional[str] = Field(
+        default=None,
+        max_length=1000
+    )
 
     employee_id: Optional[int] = Field(
         default=None,
