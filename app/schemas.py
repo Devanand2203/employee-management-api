@@ -110,6 +110,14 @@ class WorkItemCreate(WorkItemBase):
     pass
 
 
+class WorkItemStatusUpdate(BaseModel):
+
+    status:Literal[
+        "TODO",
+        "IN_PROGRESS",
+        "COMPLETED"
+    ]
+
 class WorkItemUpdate(BaseModel):
 
     title: Optional[str] = Field(
@@ -212,3 +220,15 @@ class WorkItemSearchResponse(BaseModel):
     offset: int
 
     items: list[WorkItemResponse]
+
+class EmployeeWorkSummaryResponse(BaseModel):
+
+    employee_id : int
+
+    total_work_items : int
+
+    todo : int
+
+    in_progress : int
+
+    completed : int

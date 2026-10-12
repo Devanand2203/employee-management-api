@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from app.models import Employee, WorkItem
-from app.schemas import EmployeeCreate, EmployeeUpdate,WorkItemCreate,WorkItemUpdate
+from app.schemas import EmployeeCreate, EmployeeUpdate,WorkItemCreate
 
 
 def create_employee(
@@ -315,59 +315,6 @@ def get_work_item_by_id(
         WorkItem.id == work_item_id
     ).first()
 
-def update_work_item(
-    db: Session,
-    work_item_id: int,
-    work_item : WorkItemUpdate
-):
-
-    existing = db.query(WorkItem).filter(
-        WorkItem.id == work_item_id
-    ).first()
-
-    if not existing:
-        return None
-
-    update_data = work_item.model_dump(
-        exclude_unset=True
-    )
-
-    try:
-       if "title" in update_data:
-           existing.title = update_data["title"].strip()
-
-       if "description" in update_data:
-            existing.description = update_data["description"]
-
-       if "employee_id" in update_data:
-
-          employee = db.query(Employee).filter(
-              Employee.id == update_data["employee_id"]
-              ).first()
-          
-          if not employee:
-              return "employee_not_found"
-          
-          existing.employee_id = update_data["employee_id"]
-
-       if "status" in update_data:
-           existing.status = update_data["status"]
-
-       if "priority" in update_data:
-           existing.priority = update_data["priority"]
-
-       if "due_date" in update_data:
-           existing.due_date = update_data["due_date"]
-
-       db.commit()
-
-       db.refresh(existing)
-
-       return existing
-
-    except Exception:
-       db.rollback()
-       raise
 
 def delete_work_item(
     db: Session,

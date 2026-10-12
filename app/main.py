@@ -22,15 +22,17 @@ from app.schemas import (
     EmployeeUpdate,
     EmployeeResponse,
     EmployeeSearchResponse,
+    EmployeeWorkSummaryResponse,
     WorkItemCreate,
     WorkItemUpdate,
     WorkItemResponse,
-    WorkItemSearchResponse
+    WorkItemSearchResponse,
+    WorkItemStatusUpdate
 )
 
 import app.crud as crud
 
-
+import app.services as services
 
 Base.metadata.create_all(
     bind=engine
@@ -159,6 +161,32 @@ def get_employees(
 
     return crud.get_all_employees(db)
 
+@app.get(
+    "/employees/{employee_id}/work-summary",
+    response_model=EmployeeWorkSummaryResponse
+)
+def employee_work_summary(
+    employee_id: int,
+    db: Session = Depends(get_db)
+):
+    if employee_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Employee ID must be greater than 0"
+        )
+
+    result = services.get_employee_work_summary(
+        db,
+        employee_id
+    )
+
+    if result is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Employee not found"
+        )
+
+    return result
 
 @app.get(
     "/employees/{employee_id}",
@@ -298,6 +326,12 @@ def create_work_item(
             detail="Title must not be blank"
         )
 
+    if work_item.status != "TODO":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New work items must have status TODO"
+        )
+    
     result = crud.create_work_item(
         db,
         work_item
@@ -454,7 +488,7 @@ def update_work_item(
             detail="Title must not be blank"
         )
 
-    result = crud.update_work_item(
+    result = services.update_work_item(
         db,
         work_item_id,
         work_item
@@ -467,11 +501,53 @@ def update_work_item(
             detail="Work item not found"
         )
 
+    if result == "invalid_status_transition":
+        
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid status transition"
+            )
+
     if result == "employee_not_found":
 
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Assigned employee not found"
+        )
+
+    return result
+
+@app.patch(
+    "/work-items/{work_item_id}/status",
+    response_model=WorkItemResponse
+)
+def patch_work_item_status(
+    work_item_id: int,
+    status_data: WorkItemStatusUpdate,
+    db: Session = Depends(get_db)
+):
+    if work_item_id <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Work item ID must be greater than 0"
+        )
+
+    result = services.change_work_item_status(
+        db,
+        work_item_id,
+        status_data.status
+    )
+
+    if result is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Work item not found"
+        )
+
+    if result == "invalid_status_transition":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid status transition"
         )
 
     return result
