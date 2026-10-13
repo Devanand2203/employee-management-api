@@ -1911,7 +1911,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ### Deletion and updated summary
 
-! [successful DELETE /work-items/{work_item_id}](screenshots/deleted_summary_count.jpg)
+![DELETE /work-items/{work_item_id}](screenshots/deleted_summary_count.jpg)
 
 ---
 
