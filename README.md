@@ -1884,7 +1884,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ##  PUT update validation - Invalid Status Transition
 
-![An invalid status transition through PUT /work-items/{work_item_id}](screenshots/put_update_validation.jpg) 
+![PUT /work-items/{work_item_id}](screenshots/put_update_validation.jpg) 
 
 ##  Employee work summary
 
@@ -1901,11 +1901,9 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ![Capture the work summaries for the original employee and the employee receiving the work item](screenshots/summary_bef_reassignment.jpg)
 
-### Reassignment success
+### Reassignment success - Summary after reassignment
 
-### Summary after reassignment
-
-![PUT /work-items/{work_item_id} changing the assigned employee, with a successful response](screenshots/summary_after_reassignment.jpg)
+![PUT /work-items/{work_item_id}](screenshots/summary_after_reassignment.jpg)
 
 ![The original employee's count decreases](screenshots/original_employee_count.jpg)   
 
@@ -1913,7 +1911,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ### Deletion and updated summary
 
-! [successful DELETE /work-items/{work_item_id} and the corresponding summary count decreasing](screenshots/deleted_summary_count.jpg)
+! [successful DELETE /work-items/{work_item_id}](screenshots/deleted_summary_count.jpg)
 
 ---
 
