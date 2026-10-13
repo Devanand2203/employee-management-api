@@ -1869,9 +1869,9 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ## Status Transition - Successful Update - TODO --> IN_PROGRESS
 
-![PATCH /work-items/{work_item_id}/status changing TODO → IN_PROGRESS, then IN_PROGRESS → COMPLETED. ]
-(screenshots/status_transition_1.jpg)
-(screenshots/status_transition_2.jpg)
+![PATCH /work-items/{work_item_id}/status changing TODO → IN_PROGRESS  ](screenshots/status_transition_1.jpg)
+
+[IN_PROGRESS → COMPLETED](screenshots/status_transition_2.jpg)
 
 ## Invalid Status Transition  
 
@@ -1883,22 +1883,23 @@ The following screenshots document the API testing performed through Swagger UI.
 
 
 ##  PUT update validation
-! [ An invalid status transition through PUT /work-items/{work_item_id}] (screenshots/put_update_validation.jpg) 
+
+! [ An invalid status transition through PUT /work-items/{work_item_id}](screenshots/put_update_validation.jpg) 
 
 ##  Employee work summary
 
   Work summary counts
 
-! [ GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts.] (screenshots/employee_work_summary_count.jpg)
+! [ GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts.](screenshots/employee_work_summary_count.jpg)
 
-! [Employee with zero work items
-Show a valid employee's summary with all status counts equal to zero.] (screenshots/employee_work_summary_0.jpg)
+! Employee with zero work items
+[Show a valid employee's summary with all status counts equal to zero.](screenshots/employee_work_summary_0.jpg)
 
 ## Reassignment 
 
 ###  Summary before reassignment
 
-! [Capture the work summaries for the original employee and the employee receiving the work item.] (screenshots/summary_before_reassignment.jpg)
+! [Capture the work summaries for the original employee and the employee receiving the work item.](screenshots/summary_before_reassignment.jpg)
 
 ### Reassignment success
 
@@ -1906,13 +1907,13 @@ Show a valid employee's summary with all status counts equal to zero.] (screensh
 
 ! [PUT /work-items/{work_item_id} changing the assigned employee, with a successful response.] 
 
-! [The original employee's count decreases .] (screenshots/original_employee_count.jpg)   
+! [The original employee's count decreases](screenshots/original_employee_count.jpg)   
 
-! [The receiving employee's count increases.] (screenshots/receiver_employee_count.jpg)
+! [The receiving employee's count increases](screenshots/receiver_employee_count.jpg)
 
 ### Deletion and updated summary
 
-! [successful DELETE /work-items/{work_item_id} and the corresponding summary count decreasing.] (screenshots/deleted_summary_count.jpg)
+! [successful DELETE /work-items/{work_item_id} and the corresponding summary count decreasing](screenshots/deleted_summary_count.jpg)
 
 ---
 
