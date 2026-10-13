@@ -49,6 +49,88 @@ The project demonstrates CRUD operations, request validation, database integrati
 * Employee existence validation
 * Assigned employee details included in work item responses
 * SQLAlchemy foreign key and relationship between employees and work items
+* Controlled work item status transitions (`TODO → IN_PROGRESS → COMPLETED`)
+* Status transition validation for PATCH and PUT requests
+* Employee work summary by status
+* Summary counts updated after work item reassignment or deletion
+
+---
+
+# Task 5: Status Transitions and Employee Work Summary
+
+## 1. Update Work Item Status
+
+**Endpoint:** `PATCH /work-items/{work_item_id}/status`
+
+**Example request:**
+
+```json
+{
+  "status": "IN_PROGRESS"
+}
+```
+
+**Allowed status progression:**
+
+`TODO → IN_PROGRESS → COMPLETED`
+
+**Rules:**
+- New work items must start with `TODO`.
+- Creating a work item with `IN_PROGRESS` or `COMPLETED` returns `400 Bad Request`.
+- Only the next status in the workflow is allowed.
+- Requesting the current status again is allowed.
+- Skipping or reversing a status returns `400 Bad Request`.
+- Missing, null, or invalid status input returns `422 Unprocessable Entity`.
+- A nonexistent work item returns `404 Not Found`.
+
+## 2. Status Validation During Work Item Updates
+
+**Endpoint:** `PUT /work-items/{work_item_id}`
+
+The existing update endpoint follows the same status-transition rules.
+
+- If `status` is omitted, the current status is preserved.
+- An invalid status transition returns `400 Bad Request`.
+- When a transition is rejected, other fields in that request must not be saved.
+- Invalid field values return `422 Unprocessable Entity`.
+- A nonexistent work item returns `404 Not Found`.
+
+## 3. Employee Work Summary
+
+**Endpoint:** `GET /employees/{employee_id}/work-summary`
+
+Returns the number of work items currently assigned to an employee, grouped by status.
+
+**Example response:**
+
+```json
+{
+  "employee_id": 1,
+  "total_work_items": 3,
+  "todo": 1,
+  "in_progress": 1,
+  "completed": 1
+}
+```
+
+The values above are illustrative.
+
+**Response fields:**
+- `employee_id`: Employee identifier.
+- `total_work_items`: Total number of currently assigned work items.
+- `todo`: Number of `TODO` work items.
+- `in_progress`: Number of `IN_PROGRESS` work items.
+- `completed`: Number of `COMPLETED` work items.
+
+**Rules:**
+- An existing employee with no work items receives zero counts.
+- A nonexistent employee returns `404 Not Found`.
+- Reassignment changes the summaries for the previous and new assignees.
+- Deleted work items are excluded from the summary.
+
+## 4. Business Logic
+
+Status-transition validation, work item updates, and employee work-summary calculations are handled in `app/services.py`. Database access and CRUD operations remain in `app/crud.py`.
 
 ---
 
@@ -79,6 +161,7 @@ employee-management-api/
 │   ├── models.py
 │   ├── schemas.py
 │   └── crud.py
+│   └── services.py
 │
 ├── screenshots/
 │   ├── gethealth.jpg
@@ -1782,6 +1865,55 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ![Updating a work item and assigning it to another employee](screenshots/assign_to_another_employee.jpg)
 
+# Task - 5 Screenshots
+
+## Status Transition - Successful Update - TODO --> IN_PROGRESS
+
+![PATCH /work-items/{work_item_id}/status changing TODO → IN_PROGRESS, then IN_PROGRESS → COMPLETED. ]
+(screenshots/status_transition_1.jpg)
+(screenshots/status_transition_2.jpg)
+
+## Invalid Status Transition  
+
+![Skipped transition (TODO → COMPLETED) or backward transition rejected with HTTP 400.](screenshots/invalid_status_transition.jpg)
+
+## Invalid status during creation
+
+! [ POST /work-items rejecting IN_PROGRESS or COMPLETED as the initial status with HTTP 400.](screenshots/invalid_status_while_creation.jpg)
+
+
+##  PUT update validation
+! [ An invalid status transition through PUT /work-items/{work_item_id}] (screenshots/put_update_validation.jpg) 
+
+##  Employee work summary
+
+  Work summary counts
+
+! [ GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts.] (screenshots/employee_work_summary_count.jpg)
+
+! [Employee with zero work items
+Show a valid employee's summary with all status counts equal to zero.] (screenshots/employee_work_summary_0.jpg)
+
+## Reassignment 
+
+###  Summary before reassignment
+
+! [Capture the work summaries for the original employee and the employee receiving the work item.] (screenshots/summary_before_reassignment.jpg)
+
+### Reassignment success
+
+### Summary after reassignment
+
+! [PUT /work-items/{work_item_id} changing the assigned employee, with a successful response.] 
+
+! [The original employee's count decreases .] (screenshots/original_employee_count.jpg)   
+
+! [The receiving employee's count increases.] (screenshots/receiver_employee_count.jpg)
+
+### Deletion and updated summary
+
+! [successful DELETE /work-items/{work_item_id} and the corresponding summary count decreasing.] (screenshots/deleted_summary_count.jpg)
+
 ---
 
 # Task 4 Requirements Mapping
@@ -1821,6 +1953,28 @@ The following screenshots document the API testing performed through Swagger UI.
 | Total before pagination      | Supported                              |
 | Employee details in response | `employee` relationship                |
 | Existing Employee APIs       | Preserved                              |
+
+---
+
+# Task 5 Requirements Mapping
+
+| Requirement | Implementation |
+|---|---|
+| Status update endpoint | `PATCH /work-items/{work_item_id}/status` |
+| Allowed status progression | `TODO → IN_PROGRESS → COMPLETED` |
+| Same-status request | Allowed without changing the status |
+| Invalid or skipped transition | HTTP 400 |
+| Missing or invalid status input | Pydantic validation, HTTP 422 |
+| New work items start with TODO | Enforced in the create endpoint |
+| PUT status validation | Shared transition rules in `services.py` |
+| Rejected PUT has no partial updates | Transition checked before modifying fields |
+| Employee work summary | `GET /employees/{employee_id}/work-summary` |
+| Summary grouped by status | SQLAlchemy aggregation query |
+| Employee with no work items | All counts return zero |
+| Missing employee | HTTP 404 |
+| Reassignment reflected in summary | Counts based on current employee assignment |
+| Deleted work items excluded | Summary queries current database records |
+| Database rollback handling | Work item create, update, status change, and delete operations |
 
 ---
 
