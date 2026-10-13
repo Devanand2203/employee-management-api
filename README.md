@@ -1871,7 +1871,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ![PATCH /work-items/{work_item_id}/status changing TODO → IN_PROGRESS  ](screenshots/status_transition_1.jpg)
 
-[IN_PROGRESS → COMPLETED](screenshots/status_transition_2.jpg)
+![PATCH /work-items/{work_item_id}/status changing IN_PROGRESS → COMPLETED](screenshots/status_transition_2.jpg)
 
 ## Invalid Status Transition  
 
@@ -1879,33 +1879,33 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ## Invalid status during creation
 
-! [ POST /work-items rejecting IN_PROGRESS or COMPLETED as the initial status with HTTP 400.](screenshots/invalid_status_while_creation.jpg)
+! [POST /work-items/ rejecting IN_PROGRESS or COMPLETED as the initial status with HTTP 400](screenshots/invalid_status_while_creation.jpg)
 
 
-##  PUT update validation
+##  PUT update validation - Invalid Status Transition
 
-! [ An invalid status transition through PUT /work-items/{work_item_id}](screenshots/put_update_validation.jpg) 
+! [An invalid status transition through PUT /work-items/{work_item_id}](screenshots/put_update_validation.jpg) 
 
 ##  Employee work summary
 
   Work summary counts
 
-! [ GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts.](screenshots/employee_work_summary_count.jpg)
+! [ GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts](screenshots/employee_work_summary_count.jpg)
 
 ! Employee with zero work items
-[Show a valid employee's summary with all status counts equal to zero.](screenshots/employee_work_summary_0.jpg)
+[Show a valid employee's summary with all status counts equal to zero](screenshots/employee_work_summary_0.jpg)
 
 ## Reassignment 
 
 ###  Summary before reassignment
 
-! [Capture the work summaries for the original employee and the employee receiving the work item.](screenshots/summary_before_reassignment.jpg)
+! [Capture the work summaries for the original employee and the employee receiving the work item](screenshots/summary_before_reassignment.jpg)
 
 ### Reassignment success
 
 ### Summary after reassignment
 
-! [PUT /work-items/{work_item_id} changing the assigned employee, with a successful response.] 
+! [PUT /work-items/{work_item_id} changing the assigned employee, with a successful response] 
 
 ! [The original employee's count decreases](screenshots/original_employee_count.jpg)   
 
