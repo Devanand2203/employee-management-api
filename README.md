@@ -1890,7 +1890,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
   Work summary counts
 
-![ GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts](screenshots/employee_work_summary_count.jpg)
+![GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts](screenshots/employee_work_summary_count.jpg)
 
 !Employee with zero work items
 [Show a valid employee's summary with all status counts equal to zero](screenshots/employee_work_summary_0.jpg)
@@ -1899,13 +1899,13 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ###  Summary before reassignment
 
-![Capture the work summaries for the original employee and the employee receiving the work item](screenshots/summary_before_reassignment.jpg)
+![Capture the work summaries for the original employee and the employee receiving the work item](screenshots/summary_bef_reassignment.jpg)
 
 ### Reassignment success
 
 ### Summary after reassignment
 
-![PUT /work-items/{work_item_id} changing the assigned employee, with a successful response] 
+![PUT /work-items/{work_item_id} changing the assigned employee, with a successful response](screenshots/summary_after_reassignment.jpg)
 
 ![The original employee's count decreases](screenshots/original_employee_count.jpg)   
 
