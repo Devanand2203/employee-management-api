@@ -1888,7 +1888,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ##  Employee work summary
 
-  Work summary counts
+###  Work summary counts
 
 ![GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts](screenshots/employee_work_summary_count.jpg)
 
