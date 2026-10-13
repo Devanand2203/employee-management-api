@@ -1892,8 +1892,7 @@ The following screenshots document the API testing performed through Swagger UI.
 
 ![GET /employees/{employee_id}/work-summary returning the employee's TODO, IN_PROGRESS and COMPLETED counts](screenshots/employee_work_summary_count.jpg)
 
-!Employee with zero work items
-[Show a valid employee's summary with all status counts equal to zero](screenshots/employee_work_summary_0.jpg)
+![Employee with zero work items -- a valid employee's summary with all status counts equal to zero](screenshots/employee_work_summary_0.jpg)
 
 ## Reassignment 
 
