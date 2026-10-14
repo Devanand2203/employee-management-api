@@ -192,18 +192,14 @@ employee-management-api/
 
 # Setup Instructions
 
-## 1. Clone the Repository
+**1. Clone the Repository**
 
-Clone the project repository:
+Clone the project repository and switch to the `task-5` branch:
 
 ```bash
 git clone https://github.com/Devanand2203/employee-management-api.git
-```
-
-Move into the project directory:
-
-```bash
 cd employee-management-api
+git switch task-5
 ```
 
 ---
